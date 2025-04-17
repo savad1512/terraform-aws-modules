@@ -88,3 +88,10 @@ variable "node_instance_type" {
 
 # IAM
 # No specific variables unless you want to pass role names explicitly — right now it's just using `tags`
+
+#REDIS
+variable "engine_version" {
+  description = "Redis engine version"
+  type        = string
+  default     = "7.0" # ✅ must be a valid version like "7.0", "7.1", not "7.x"
+}

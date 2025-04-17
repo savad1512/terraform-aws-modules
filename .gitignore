@@ -1,0 +1,6 @@
+# Ignore Terraform binary and provider executables
+terraform.exe
+*.exe
+*.zip
+.terraform/
+.terraform.lock.hcl

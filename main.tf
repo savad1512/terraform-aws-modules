@@ -33,6 +33,7 @@ module "ec2" {
   tags              = var.tags
 }
 
+
 module "rds" {
   source                 = "./modules/rds"
   db_subnet_ids          = module.vpc.public_subnet_ids
@@ -42,4 +43,13 @@ module "rds" {
   db_instance_class      = var.db_instance_class
   vpc_security_group_ids = [module.vpc.security_group_id]
   tags                   = var.tags
+}
+
+
+module "redis" {
+  source         = "./modules/redis"
+  vpc_id         = module.vpc.vpc_id
+  subnet_ids     = module.vpc.private_subnet_ids
+  tags           = var.tags
+  allowed_cidrs  = ["10.0.0.0/16"] # Or restrict to your app's CIDR range
 }
