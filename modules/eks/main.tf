@@ -3,7 +3,8 @@ resource "aws_eks_cluster" "eks_cluster" {
   role_arn = var.role_arn
 
   vpc_config {
-    subnet_ids = var.subnet_ids
+    subnet_ids         = var.subnet_ids
+    security_group_ids = [var.cluster_security_group_id]  # Use passed SG ID
   }
 
   tags = merge(
@@ -28,6 +29,9 @@ resource "aws_eks_node_group" "eks_nodes" {
     min_size     = 1
   }
 
+  # Correct attribute: Use node_security_group_ids (plural)
+  #node_security_group_ids = [var.node_security_group_id]
+
   tags = merge(
     var.tags,
     {
@@ -35,3 +39,4 @@ resource "aws_eks_node_group" "eks_nodes" {
     }
   )
 }
+

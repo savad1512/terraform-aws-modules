@@ -143,15 +143,35 @@ resource "aws_security_group" "vpc_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+   tags = merge(
+    var.tags,
+    {
+      Name = "my-vpc-public-sg"
+    }
+  )
 }
-## security.tf
-resource "aws_security_group" "eks_sg" {
+## eks-cluster-sg
+resource "aws_security_group" "eks_cluster_sg" {
    name        = "eks-sg"
    description = "Allow eks-access"
    vpc_id      = aws_vpc.main.id
@@ -161,6 +181,14 @@ resource "aws_security_group" "eks_sg" {
      protocol = "tcp" 
      cidr_blocks = ["0.0.0.0/0"] 
      }
+
+   ingress {
+     from_port = 80
+     to_port = 80
+     protocol = "tcp" 
+     cidr_blocks = ["0.0.0.0/0"] 
+     }
+
   egress { 
     from_port = 0 
     to_port = 0 
@@ -168,10 +196,41 @@ resource "aws_security_group" "eks_sg" {
     cidr_blocks = ["0.0.0.0/0"] 
     }
 
-   tags = merge(
-    var.tags,
-    {
-      Name = "my-vpc-public-sg"
-    }
-  )
+     tags = {
+    Name = "eks-cluster-sg"
+  }
+}
+
+# eks-node-sg
+resource "aws_security_group" "eks_node_sg" {
+  name        = "eks-node-sg"
+  description = "Security group for EKS worker nodes"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port       = 0
+    to_port         = 65535
+    protocol        = "tcp"
+    security_groups = [aws_security_group.eks_cluster_sg.id]
+    description     = "Allow worker nodes to receive traffic from control plane"
+  }
+
+  ingress {
+    from_port   = 30000
+    to_port     = 32767
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow access to NodePort services (optional)"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "eks-node-sg"
+  }
 }

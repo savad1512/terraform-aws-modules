@@ -51,7 +51,7 @@ variable "key_name" {
 # RDS
 variable "db_username" {
   type = string
-  default = "admin"
+  default = "dbadmin"
 }
 
 variable "db_password" {

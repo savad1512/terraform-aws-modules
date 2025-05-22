@@ -4,3 +4,7 @@ terraform.exe
 *.zip
 .terraform/
 .terraform.lock.hcl
+my-key-pair.pem
+terraform.tfstate
+terraform.tfstate.backup
+

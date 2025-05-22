@@ -4,7 +4,7 @@ variable "db_subnet_ids" {
 
 variable "db_username" {
   type = string
-  default = "admin"
+  default = "dbadmin"
 
 }
 

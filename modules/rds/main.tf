@@ -12,8 +12,8 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 resource "aws_db_instance" "rds" {
   identifier              = var.db_name
   allocated_storage       = 20
-  engine                  = "mysql"
-  engine_version          = "8.0"
+  engine                  = "postgres"
+  engine_version          = "15"
   instance_class          = var.db_instance_class
   username                = var.db_username
   password                = var.db_password
